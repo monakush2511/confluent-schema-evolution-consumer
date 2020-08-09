@@ -1,0 +1,36 @@
+topic:
+  name: sensor_topic
+  partitions-num: 6
+  replication-factor: 3
+
+spring:
+  cloud:
+    stream:
+      default: 
+         producer: 
+          useNativeEncoding: true
+         consumer:  
+          useNativeEncoding: true     
+      bindings:
+        input:
+          destination: sensor_topic
+          content-type: application/*+avro
+          group: simple-consumer
+          
+        output:
+          destination: sensor_topic
+          content-type: application/*+avro
+      kafka:
+          binder:        
+           consumer-properties:
+             key.serializer: io.confluent.kafka.serializers.StringDeserializer
+             value.serializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+             schema.registry.url: https://psrc-lgy7n.europe-west3.gcp.confluent.cloud 
+            
+    #schema:
+     # avro:
+       # schema-locations: classpath:avro/sensor.avsc
+       # subjectNamePrefix:  sensor-topic-value
+        #subjectNamingStrategy: org.springframework.cloud.schema.registry.avro.SubjectPrefixOnlyNamingStrategy
+
+
